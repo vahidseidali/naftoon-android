@@ -4,16 +4,21 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
-      - run: |
+      - name: Install deps
+        run: |
           sudo apt update
           sudo apt install -y openjdk-17-jdk unzip wget git
           pip install buildozer cython==0.29.36
-      - run: buildozer android debug
-      - uses: actions/upload-artifact@v4
+      - name: Build APK
+        run: |
+          cd Naftoon_Android
+          buildozer android debug
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
         with:
           name: Naftoon-APK
-          path: bin/*.apk
+          path: Naftoon_Android/bin/*.apk
